@@ -20,6 +20,7 @@ import {
   loginSchema,
 } from '../models/Login.';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../hooks/useAuth';
 
 export interface LoginFormProps {
   loginRedirectUrl?: string;
@@ -28,6 +29,7 @@ export interface LoginFormProps {
 
 const LoginForm = ({ loginRedirectUrl = '/', error = '' }: LoginFormProps) => {
   const navigate = useNavigate();
+  const { login } = useAuth();
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [loginError, setLoginError] = React.useState<string>(error);
   const [showPassword, setShowPassword] = useState(false);
@@ -37,31 +39,24 @@ const LoginForm = ({ loginRedirectUrl = '/', error = '' }: LoginFormProps) => {
 
   const methods = useForm<LoginFormValues>({
     resolver: yupResolver(loginSchema),
-    mode: 'onBlur',
-    reValidateMode: 'onBlur',
+    mode: 'onChange',
+    reValidateMode: 'onChange',
     defaultValues: defaultLoginValues,
     shouldFocusError: true,
     shouldUseNativeValidation: false,
   });
   const { handleSubmit, formState } = methods;
   const onSubmit = async (data: LoginFormValues) => {
+    console.log('onSubmit().  data: ', data);
     setLoginError('');
-    try {
-      const result = await fetch('/api/login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(data),
-      });
-      // eslint-disable-next-line no-console
-      console.log('Login result: ', result);
-      navigate(loginRedirectUrl);
-    } catch (error) {
+    const result = await login(data);
+    console.log('LoginForm() login result: ', result);
+    if (!result.success) {
       // eslint-disable-next-line no-console
       console.error('Login failed:', error);
-      setLoginError('Login failed. Please try again later.');
-      return;
+      setLoginError(result?.message || 'Login failed. Please try again later.');
+    } else {
+      navigate(loginRedirectUrl);
     }
   };
 
@@ -72,7 +67,8 @@ const LoginForm = ({ loginRedirectUrl = '/', error = '' }: LoginFormProps) => {
         flexDirection: 'column',
         alignItems: 'center',
         justifyContent: 'center',
-        height: '100vh',
+        marginTop: '64px',
+        height: '50vh',
         padding: '10px',
       }}
     >
@@ -114,6 +110,17 @@ const LoginForm = ({ loginRedirectUrl = '/', error = '' }: LoginFormProps) => {
                     },
                   }}
                 />
+                {loginError && (
+                  <Box
+                    sx={{
+                      color: 'error.main',
+                      marginTop: '10px',
+                      textAlign: 'center',
+                    }}
+                  >
+                    {loginError}
+                  </Box>
+                )}
                 <Box
                   sx={{
                     display: 'flex',
