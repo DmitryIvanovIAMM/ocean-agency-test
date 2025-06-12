@@ -50,7 +50,7 @@ const LoginForm = ({ loginRedirectUrl = '/', error = '' }: LoginFormProps) => {
     console.log('onSubmit().  data: ', data);
     setLoginError('');
     const result = await login(data);
-    console.log('LoginFom() login result: ', result);
+    console.log('LoginForm() login result: ', result);
     if (!result.success) {
       // eslint-disable-next-line no-console
       console.error('Login failed:', error);
