@@ -19,7 +19,7 @@ import {
   LoginFormValues,
   loginSchema,
 } from '../models/Login.';
-import { redirect } from 'react-router';
+import { useNavigate } from 'react-router-dom';
 
 export interface LoginFormProps {
   loginRedirectUrl?: string;
@@ -27,6 +27,7 @@ export interface LoginFormProps {
 }
 
 const LoginForm = ({ loginRedirectUrl = '/', error = '' }: LoginFormProps) => {
+  const navigate = useNavigate();
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [loginError, setLoginError] = React.useState<string>(error);
   const [showPassword, setShowPassword] = useState(false);
@@ -55,7 +56,7 @@ const LoginForm = ({ loginRedirectUrl = '/', error = '' }: LoginFormProps) => {
       });
       // eslint-disable-next-line no-console
       console.log('Login result: ', result);
-      redirect(loginRedirectUrl);
+      navigate(loginRedirectUrl);
     } catch (error) {
       // eslint-disable-next-line no-console
       console.error('Login failed:', error);

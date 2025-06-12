@@ -16,7 +16,7 @@ export function About() {
       <SectionTitle title="About Page" />
       <p>Test application for Ocean Agency.</p>
       <p>Why it contains only frontend for full-stack developer?</p>
-      <p>May be the NexJS with DB should be allowed instead of MirageJS?</p>
+      <p>Maybe the NextJS with DB should be allowed instead of MirageJS?</p>
     </Box>
   );
 }
