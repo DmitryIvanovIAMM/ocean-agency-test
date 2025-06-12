@@ -210,7 +210,7 @@ export const LOGIN_AUDITS: LoginAudit[] = [
     id: '14',
     userId: '1',
     loginTime: new Date('2023-10-02T13:00:00Z'),
-    ipAddress: '16.57.24.2516.57.24.25',
+    ipAddress: '16.57.24.25',
     userAgent:
       'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/85.0.4183.121 Safari/537.36',
     success: true,
