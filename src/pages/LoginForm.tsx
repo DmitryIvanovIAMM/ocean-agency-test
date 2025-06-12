@@ -51,10 +51,10 @@ const LoginForm = ({ loginRedirectUrl = '/', error = '' }: LoginFormProps) => {
     setLoginError('');
     const result = await login(data);
     console.log('LoginFom() login result: ', result);
-    if (!result) {
+    if (!result.success) {
       // eslint-disable-next-line no-console
       console.error('Login failed:', error);
-      setLoginError('Login failed. Please try again later.');
+      setLoginError(result?.message || 'Login failed. Please try again later.');
     } else {
       navigate(loginRedirectUrl);
     }
@@ -110,6 +110,17 @@ const LoginForm = ({ loginRedirectUrl = '/', error = '' }: LoginFormProps) => {
                     },
                   }}
                 />
+                {loginError && (
+                  <Box
+                    sx={{
+                      color: 'error.main',
+                      marginTop: '10px',
+                      textAlign: 'center',
+                    }}
+                  >
+                    {loginError}
+                  </Box>
+                )}
                 <Box
                   sx={{
                     display: 'flex',

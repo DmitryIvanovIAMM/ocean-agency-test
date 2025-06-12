@@ -1,4 +1,4 @@
-import { Server, Model } from 'miragejs';
+import { Server, Model, Response } from 'miragejs';
 import { mapUserToFrontend, User } from '../models/User';
 import { LoginAudit } from '../models/LoginAudit';
 import { LOGIN_AUDITS, USERS } from './seedData';
@@ -50,6 +50,15 @@ export function makeServer({ environment = 'development' } = {}) {
         const { email, password } = JSON.parse(request.requestBody);
 
         const user = schema.db.users.findBy({ email, password });
+
+        if (!user) {
+          const errorActionResult: ActionResult = {
+            success: false,
+            message: 'Invalid email or password',
+          };
+
+          return new Response(401, {}, errorActionResult);
+        }
 
         const successActionResult = {
           success: true,

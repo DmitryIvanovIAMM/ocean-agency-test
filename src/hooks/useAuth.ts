@@ -5,13 +5,13 @@ import { LoginFormValues } from '../models/Login.';
 
 interface useAuthStore {
   user?: UserFrontend | null; // <-- optional to allow undefine
-  login: (loginFormValues: LoginFormValues) => Promise<boolean>;
+  login: (loginFormValues: LoginFormValues) => Promise<ActionResult>;
 }
 
 export const useAuth = create<useAuthStore>((set) => ({
   user: undefined, // <-- initially "unknown"
 
-  login: async (loginFormValues: LoginFormValues): Promise<boolean> => {
+  login: async (loginFormValues: LoginFormValues): Promise<ActionResult> => {
     try {
       const result: ActionResult = await (
         await fetch('/api/login', {
@@ -28,15 +28,18 @@ export const useAuth = create<useAuthStore>((set) => ({
         // eslint-disable-next-line no-console
         console.error('Login failed:', result.message);
         set({ user: result.data });
-        return false;
+        return result;
       } else {
         set({ user: result.data });
-        return true;
+        return result;
       }
     } catch (error) {
       console.error('Login error:', error);
       set({ user: null });
-      return false;
+      return {
+        success: false,
+        message: 'Login failed. Please try again later.',
+      };
     }
   },
 }));
